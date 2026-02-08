@@ -11,6 +11,8 @@
     //Constantes e definições
 #define MAX_ITENS 10
 #define MAX_NOME 50
+    //Variáveis globais
+int totalItens = 0; // Controla a quantidade atual de itens na mochila
 
 // Struct para representar um item
 struct Item{
@@ -40,10 +42,9 @@ int main() {
         return 1; //retorna 1 para indicar um erro.
     }
     int opcao; // Menu principal com opções
-    int totalItens = 0;
 
     do {
-        exibirMenu();
+        exibirMenu(totalItens);
         if (scanf("%d", &opcao) != 1) { 
             opcao = -1;
         }
@@ -52,9 +53,11 @@ int main() {
         switch (opcao) {
             case 1:
                 inserirItem(mochila, &totalItens);
+                listarItens(mochila, totalItens);
                 break;
             case 2:
                 removerItem(mochila, &totalItens);
+                listarItens(mochila, totalItens);
                 break;
             case 3:
                 listarItens(mochila, totalItens);
@@ -84,15 +87,15 @@ void limparTela() {
     while ((c = getchar()) != '\n' && c != EOF);
 }
 
-void exibirMenu() {
-    printf("---MANIPULAÇÂO DE LISTAS ---\n");
-    printf("1. Adicionar um item\n");
-    printf("2. Remover um item\n");
-    printf("3. Listar todos os itens\n");
+void exibirMenu(int totalItens) {
+    printf("Itens na mochila: %d/%d\n", totalItens, MAX_ITENS);
+    printf("\n1. Adicionar item (LOOT)\n");
+    printf("2. Remover item\n");
+    printf("3. Listar itens na mochila\n");
     printf("4. Ordenar os itens por critério (nome, tipo, prioridade)\n");
     printf("5. Realizar busca binária por nome\n");
     printf("0. Sair\n");
-    printf("Opcao: ");
+    printf("\nOpcao: ");
 }
 
 void inserirItem(struct Item *mochila, int *totalItens) {
@@ -150,11 +153,14 @@ void listarItens(struct Item *mochila, int totalItens) {
     if (totalItens == 0) { 
         printf("\nMochila vazia. Vá saquear!\n"); return; 
     }
-    printf("\n--- CONTEÚDO DA MOCHILA (%d/%d) ---\n", totalItens, MAX_ITENS);
+    printf("\n--------------------------------------------\n");
+    printf("--- CONTEÚDO DA MOCHILA (%d/%d) ---\n", totalItens, MAX_ITENS);
+    printf("--------------------------------------------\n");
     for (int i = 0; i < totalItens; i++) {
         printf("[%d] %-15s | Tipo: %-10s | Qtd: %02d | Prio: %d\n", 
                i+1, mochila[i].nome, mochila[i].tipo, mochila[i].quantidade, mochila[i].prioridade);
     }
+    printf("--------------------------------------------\n");
 }
 
 void menuDeOrdenacao(struct Item *mochila, int totalItens) {
